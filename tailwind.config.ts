@@ -61,7 +61,21 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				chart: {
+					'memory-rss': 'hsl(var(--chart-memory-rss))',
+					'memory-heap-used': 'hsl(var(--chart-memory-heap-used))',
+					'memory-heap-total': 'hsl(var(--chart-memory-heap-total))',
+					'memory-external': 'hsl(var(--chart-memory-external))',
+					'cpu-user': 'hsl(var(--chart-cpu-user))',
+					'cpu-system': 'hsl(var(--chart-cpu-system))',
+					grid: 'hsl(var(--chart-grid))',
+					text: 'hsl(var(--chart-text))'
 				}
+			},
+			backgroundImage: {
+				'gradient-primary': 'var(--gradient-primary)',
+				'gradient-chart': 'var(--gradient-chart)'
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
