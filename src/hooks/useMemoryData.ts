@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { MemoryCheckResponse, ChartDataPoint } from '@/types/memory';
 
 const MAX_DATA_POINTS = 100; // Keep last 100 points for performance
@@ -115,10 +115,12 @@ export const useMemoryData = (endpoint: string = '/mem-check') => {
     });
   }, []);
 
-  // Update chart data when new data arrives
-  if (data) {
-    updateChartData(data);
-  }
+  // Update chart data when new data arrives - moved to useEffect to prevent infinite renders
+  useEffect(() => {
+    if (data) {
+      updateChartData(data);
+    }
+  }, [data, updateChartData]);
 
   return {
     currentData: data,
