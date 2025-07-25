@@ -72,19 +72,30 @@ const generateMockData = (): MemoryCheckResponse => {
 
 export const useMemoryData = (endpoint: string = '/mem-check') => {
   const [chartData, setChartData] = useState<ChartDataPoint[]>([]);
+  const [lastError, setLastError] = useState<string>('');
+  const [isConnected, setIsConnected] = useState<boolean>(false);
 
   const { data, error, isLoading } = useQuery({
-    queryKey: ['memory-check'],
+    queryKey: ['memory-check', endpoint],
     queryFn: async (): Promise<MemoryCheckResponse> => {
       try {
+        setLastError('');
         const response = await fetch(endpoint);
         if (!response.ok) {
-          throw new Error('Failed to fetch memory data');
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
         }
-        return await response.json();
+        const contentType = response.headers.get('content-type');
+        if (!contentType || !contentType.includes('application/json')) {
+          throw new Error('Response is not JSON');
+        }
+        const jsonData = await response.json();
+        setIsConnected(true);
+        return jsonData;
       } catch (error) {
-        // Return mock data if endpoint fails
-        console.warn('Using mock data:', error);
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+        setLastError(errorMessage);
+        setIsConnected(false);
+        console.warn('Using mock data:', errorMessage);
         return generateMockData();
       }
     },
@@ -127,5 +138,7 @@ export const useMemoryData = (endpoint: string = '/mem-check') => {
     chartData,
     error,
     isLoading,
+    lastError,
+    isConnected,
   };
 };

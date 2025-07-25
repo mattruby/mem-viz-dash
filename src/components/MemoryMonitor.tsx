@@ -1,13 +1,16 @@
+import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { useMemoryData } from '@/hooks/useMemoryData';
 import { MemoryChart } from './MemoryChart';
 import { CPUChart } from './CPUChart';
 import { MetricCard } from './MetricCard';
+import { EndpointConfig } from './EndpointConfig';
 import { Activity, Server, Clock, Zap } from 'lucide-react';
 
 export const MemoryMonitor = () => {
-  const { currentData, chartData, error, isLoading } = useMemoryData();
+  const [endpointUrl, setEndpointUrl] = useState('/mem-check');
+  const { currentData, chartData, error, isLoading, lastError, isConnected } = useMemoryData(endpointUrl);
 
   if (error) {
     return (
@@ -66,6 +69,14 @@ export const MemoryMonitor = () => {
             )}
           </div>
         </div>
+
+        {/* Endpoint Configuration */}
+        <EndpointConfig
+          currentUrl={endpointUrl}
+          onUrlChange={setEndpointUrl}
+          isConnected={isConnected}
+          lastError={lastError}
+        />
 
         {/* Current Metrics */}
         {currentData && (
