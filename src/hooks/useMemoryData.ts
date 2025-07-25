@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { useState, useCallback, useEffect } from 'react';
 import { MemoryCheckResponse, ChartDataPoint } from '@/types/memory';
+import { fetchWithProxy } from '@/utils/proxy';
 
 const MAX_DATA_POINTS = 100; // Keep last 100 points for performance
 
@@ -80,7 +81,7 @@ export const useMemoryData = (endpoint: string = '/mem-check') => {
     queryFn: async (): Promise<MemoryCheckResponse> => {
       try {
         setLastError('');
-        const response = await fetch(endpoint);
+        const response = await fetchWithProxy(endpoint);
         if (!response.ok) {
           throw new Error(`HTTP ${response.status}: ${response.statusText}`);
         }
